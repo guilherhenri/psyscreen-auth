@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common'
+
 import { type Either, left, right } from '@/core/either'
 
 import { User } from '../../enterprise/entities/user'
@@ -13,6 +15,7 @@ interface EnrollIdentityUseCaseRequest {
 
 type EnrollIdentityUseCaseResponse = Either<Error, { user: User }>
 
+@Injectable()
 export class EnrollIdentityUseCase {
   constructor(
     private usersRepository: UsersRepository,
