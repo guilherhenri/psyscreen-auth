@@ -17,6 +17,16 @@ export class TypeOrmUsersRepository implements UsersRepository {
     this.usersRepository = this.typeorm.getRepository(TypeOrmUser)
   }
 
+  async findById(id: string): Promise<User | null> {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+    })
+
+    if (!user) return null
+
+    return TypeOrmUserMapper.toDomain(user)
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const user = await this.usersRepository.findOne({
       where: { email },

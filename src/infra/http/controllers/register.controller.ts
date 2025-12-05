@@ -12,7 +12,7 @@ import { EmailAlreadyInUseError } from '@/domain/application/use-cases/errors/em
 
 import { CreateUserBodyDto } from '../dtos/create-user-body'
 
-@Controller('sign-up')
+@Controller('/sign-up')
 export class RegisterController {
   constructor(private readonly enrollIdentity: EnrollIdentityUseCase) {}
 

@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common'
+
 import { type Either, left, right } from '@/core/either'
 
 import { Encryptor } from '../cryptography/encryptor'
@@ -15,6 +17,7 @@ type AuthenticateSessionUseCaseResponse = Either<
   { accessToken: string; refreshToken: string }
 >
 
+@Injectable()
 export class AuthenticateSessionUseCase {
   constructor(
     private usersRepository: UsersRepository,
@@ -43,12 +46,18 @@ export class AuthenticateSessionUseCase {
       return left(new InvalidCredentialsError())
     }
 
-    const accessToken = await this.encryptor.encrypt({
-      sub: user.id.toString(),
-    })
-    const refreshToken = await this.encryptor.encrypt({
-      sub: user.id.toString(),
-    })
+    const accessToken = await this.encryptor.encrypt(
+      {
+        sub: user.id.toString(),
+      },
+      'access'
+    )
+    const refreshToken = await this.encryptor.encrypt(
+      {
+        sub: user.id.toString(),
+      },
+      'refresh'
+    )
 
     return right({ accessToken, refreshToken })
   }
