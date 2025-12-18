@@ -12,6 +12,6 @@ export default async (): Promise<Config> => ({
   transform: {
     ...tsJestTransformCfg,
   },
-  testMatch: ['**/*.e2e-spec.ts'],
-  setupFilesAfterEnv: ['<rootDir>/test/setup-e2e.ts'],
+  testMatch: ['**/*.integration-spec.ts'],
+  setupFilesAfterEnv: ['<rootDir>/test/setup-integration.ts'],
 })

@@ -1,25 +1,30 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectDataSource } from '@nestjs/typeorm'
-import { DataSource } from 'typeorm'
+import {
+  DataSource,
+  type EntityTarget,
+  type ObjectLiteral,
+  type Repository,
+} from 'typeorm'
 
 @Injectable()
-export class TypeOrmService
-  extends DataSource
-  implements OnModuleInit, OnModuleDestroy
-{
-  constructor(@InjectDataSource() private readonly dataSource: DataSource) {
-    super(dataSource.options)
+export class TypeOrmService implements Pick<
+  DataSource,
+  'getRepository' | 'query' | 'runMigrations'
+> {
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
+
+  getRepository<Entity extends ObjectLiteral>(
+    target: EntityTarget<Entity>
+  ): Repository<Entity> {
+    return this.dataSource.getRepository(target)
   }
 
-  async onModuleInit() {
-    if (!this.isInitialized) {
-      await this.initialize()
-    }
+  query(query: string, parameters?: unknown[]) {
+    return this.dataSource.query(query, parameters)
   }
 
-  async onModuleDestroy() {
-    if (this.isInitialized) {
-      await this.destroy()
-    }
+  async runMigrations() {
+    return this.dataSource.runMigrations()
   }
 }

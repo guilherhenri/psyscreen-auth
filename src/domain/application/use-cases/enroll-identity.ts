@@ -13,7 +13,10 @@ interface EnrollIdentityUseCaseRequest {
   password: string
 }
 
-type EnrollIdentityUseCaseResponse = Either<Error, { user: User }>
+type EnrollIdentityUseCaseResponse = Either<
+  EmailAlreadyInUseError,
+  { user: User }
+>
 
 @Injectable()
 export class EnrollIdentityUseCase {

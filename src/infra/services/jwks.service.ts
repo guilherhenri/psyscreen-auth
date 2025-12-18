@@ -1,13 +1,13 @@
-import { Controller, Get } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import * as jose from 'jose'
 
-import { EnvService } from '@/infra/env/env.service'
+import { EnvService } from '../env/env.service'
 
-@Controller('.well-known/jwks.json')
-export class JwksController {
+@Injectable()
+export class JwksService {
   constructor(private readonly env: EnvService) {}
 
-  private async getJwks() {
+  async keys() {
     const publicKeyPem = Buffer.from(
       this.env.get('JWT_PUBLIC_KEY'),
       'base64'
@@ -22,10 +22,5 @@ export class JwksController {
     jwk.use = 'sig'
 
     return { keys: [jwk] }
-  }
-
-  @Get()
-  async handle() {
-    return this.getJwks()
   }
 }

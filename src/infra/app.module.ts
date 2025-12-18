@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { envSchema } from './env/env'
 import { EnvModule } from './env/env.module'
 import { EnvService } from './env/env.service'
-import { HttpModule } from './http/http.module'
+import { HandlersModule } from './handlers/handlers.module'
 
 @Module({
   imports: [
@@ -28,8 +28,7 @@ import { HttpModule } from './http/http.module'
         }
       },
     }),
-    HttpModule,
-    EnvModule,
+    HandlersModule,
   ],
 })
 export class AppModule {}

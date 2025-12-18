@@ -6,19 +6,19 @@ import { RenewTokenUseCase } from '@/domain/application/use-cases/renew-token'
 
 import { CryptographyModule } from '../cryptography/cryptography.module'
 import { DatabaseModule } from '../database/database.module'
-import { EnvModule } from '../env/env.module'
-import { AuthenticateController } from './controllers/authenticate.controller'
-import { JwksController } from './controllers/jwks.controller'
-import { RefreshTokenController } from './controllers/refresh-token.controller'
-import { RegisterController } from './controllers/register.controller'
+import { ServicesModule } from '../services/services.module'
+import { JwksCommandHandler } from './jwks-keys-command.handler'
+import { LoginUserCommandHandler } from './login-user-command.handler'
+import { RefreshTokenCommandHandler } from './refresh-token-command.handler'
+import { RegisterUserCommandHandler } from './register-user-command.handler'
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule, EnvModule],
+  imports: [DatabaseModule, CryptographyModule, ServicesModule],
   controllers: [
-    RegisterController,
-    AuthenticateController,
-    RefreshTokenController,
-    JwksController,
+    RegisterUserCommandHandler,
+    LoginUserCommandHandler,
+    RefreshTokenCommandHandler,
+    JwksCommandHandler,
   ],
   providers: [
     EnrollIdentityUseCase,
@@ -26,4 +26,4 @@ import { RegisterController } from './controllers/register.controller'
     RenewTokenUseCase,
   ],
 })
-export class HttpModule {}
+export class HandlersModule {}
