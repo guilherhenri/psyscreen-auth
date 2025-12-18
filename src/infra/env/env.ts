@@ -5,6 +5,7 @@ export const envSchema = z.object({
     .enum(['development', 'test', 'production'])
     .default('development'),
 
+  DATABASE_HOST: z.string(),
   DATABASE_USER: z.string(),
   DATABASE_PASSWORD: z.string(),
   DATABASE_NAME: z.string(),

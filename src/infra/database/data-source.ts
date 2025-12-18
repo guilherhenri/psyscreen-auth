@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import { DataSource, type DataSourceOptions } from 'typeorm'
 
 import { envSchema } from '../env/env'
@@ -9,7 +7,7 @@ export const getDataSourceOptions = (): DataSourceOptions => {
 
   return {
     type: 'postgres',
-    host: 'localhost',
+    host: env.DATABASE_HOST,
     port: env.DATABASE_PORT,
     username: env.DATABASE_USER,
     password: env.DATABASE_PASSWORD,

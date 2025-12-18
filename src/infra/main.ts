@@ -7,20 +7,23 @@ import {
 
 import { AppModule } from './app.module'
 
-const kafkaOptions: KafkaOptions = {
-  transport: Transport.KAFKA,
-  options: {
-    client: {
-      clientId: 'auth',
-      brokers: ['localhost:9092'],
-    },
-    consumer: {
-      groupId: 'auth-consumer',
-    },
-  },
-}
-
 async function bootstrap() {
+  console.log(process.env.KAFKA_BROKER)
+  const kafkaBroker = process.env.KAFKA_BROKER ?? 'localhost:9092'
+
+  const kafkaOptions: KafkaOptions = {
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        clientId: 'auth',
+        brokers: [kafkaBroker],
+      },
+      consumer: {
+        groupId: 'auth-consumer',
+      },
+    },
+  }
+
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     kafkaOptions

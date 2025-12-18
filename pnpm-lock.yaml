@@ -29,6 +29,9 @@ importers:
       '@nestjs/typeorm':
         specifier: ^11.0.0
         version: 11.0.0(@nestjs/common@11.1.9(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.9)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.1)(typescript@5.9.3)))
+      '@psyscreen/contracts':
+        specifier: ^0.3.3
+        version: 0.3.3(class-transformer@0.5.1)(class-validator@0.14.3)(typescript@5.9.3)
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -73,11 +76,8 @@ importers:
         specifier: ^11.0.1
         version: 11.1.9(@nestjs/common@11.1.9(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.9)(@nestjs/microservices@11.1.9)(@nestjs/platform-express@11.1.9)
       '@psyscreen/config':
-        specifier: ^0.2.1
-        version: 0.2.1(@types/eslint@9.6.1)(eslint@9.39.1(jiti@2.6.1))(prettier@3.7.4)(typescript@5.9.3)
-      '@psyscreen/contracts':
-        specifier: ^0.3.3
-        version: 0.3.3(class-transformer@0.5.1)(class-validator@0.14.3)(typescript@5.9.3)
+        specifier: ^0.2.3
+        version: 0.2.3(@types/eslint@9.6.1)(eslint@9.39.1(jiti@2.6.1))(prettier@3.7.4)(typescript@5.9.3)
       '@swc/cli':
         specifier: ^0.6.0
         version: 0.6.0(@swc/core@1.15.3)(chokidar@4.0.3)
@@ -96,9 +96,9 @@ importers:
       '@types/node':
         specifier: ^24.10.1
         version: 24.10.1
-      dotenv:
-        specifier: ^17.2.3
-        version: 17.2.3
+      dotenv-cli:
+        specifier: ^11.0.0
+        version: 11.0.0
       eslint:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.6.1)
@@ -1132,8 +1132,8 @@ packages:
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
 
-  '@psyscreen/config@0.2.1':
-    resolution: {integrity: sha512-Phnm/7NnuTnY78ThMEdyzFiDsYUyA2HJa2+Mtzl/gCo4j0IgXPYFcMHHsSLGr9EUvVXbojl8NMSi1YmDNPcrLw==}
+  '@psyscreen/config@0.2.3':
+    resolution: {integrity: sha512-Q2dgEbHrPB+5b/HCWDEufBHuTsnEE9DjO0zM3ezhq1/ah5H7rpR7en7/JvJlrmq1BEYh87wmJRrLziHWtq52bg==}
     peerDependencies:
       eslint: ^9.39.1
       prettier: ^3.4.2
@@ -2203,6 +2203,10 @@ packages:
   dockerode@4.0.9:
     resolution: {integrity: sha512-iND4mcOWhPaCNh54WmK/KoSb35AFqPAUWFMffTQcp52uQt36b5uNwEJTSXntJZBbeGad72Crbi/hvDIv6us/6Q==}
     engines: {node: '>= 8.0'}
+
+  dotenv-cli@11.0.0:
+    resolution: {integrity: sha512-r5pA8idbk7GFWuHEU7trSTflWcdBpQEK+Aw17UrSHjS6CReuhrrPcyC3zcQBPQvhArRHnBo/h6eLH1fkCvNlww==}
+    hasBin: true
 
   dotenv-expand@12.0.1:
     resolution: {integrity: sha512-LaKRbou8gt0RNID/9RoI+J2rvXsBRPMV7p+ElHlPhcSARbCPDYcYG2s1TIzAfWv4YSgyY5taidWzzs31lNV3yQ==}
@@ -5279,7 +5283,7 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@psyscreen/config@0.2.1(@types/eslint@9.6.1)(eslint@9.39.1(jiti@2.6.1))(prettier@3.7.4)(typescript@5.9.3)':
+  '@psyscreen/config@0.2.3(@types/eslint@9.6.1)(eslint@9.39.1(jiti@2.6.1))(prettier@3.7.4)(typescript@5.9.3)':
     dependencies:
       '@eslint/js': 9.39.1
       eslint: 9.39.1(jiti@2.6.1)
@@ -6468,6 +6472,13 @@ snapshots:
       uuid: 10.0.0
     transitivePeerDependencies:
       - supports-color
+
+  dotenv-cli@11.0.0:
+    dependencies:
+      cross-spawn: 7.0.6
+      dotenv: 17.2.3
+      dotenv-expand: 12.0.1
+      minimist: 1.2.8
 
   dotenv-expand@12.0.1:
     dependencies:
