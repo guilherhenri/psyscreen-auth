@@ -1,0 +1,175 @@
+name: Unit and Integration Tests
+
+on:
+  workflow_call:
+
+env:
+  TURBO_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  TURBO_TEAM: guilherhenri
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        run: npm install -g pnpm@10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+  unit:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        run: npm install -g pnpm@10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Unit tests
+        run: pnpm test
+
+  integration:
+    needs: setup
+    runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:dind
+        options: --privileged
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        run: npm install -g pnpm@10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: |
+            image=moby/buildkit:latest
+            network=host
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ hashFiles('**/docker-compose.test.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Install Docker Compose
+        run: |
+          curl -L "https://github.com/docker/compose/releases/download/v5.0.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: Start Docker Compose
+        run: |
+          export BUILDX_CACHE_FROM=type=local,src=/tmp/.buildx-cache
+          export BUILDX_CACHE_TO=type=local,dest=/tmp/.buildx-cache-new,mode=max
+          docker-compose -f docker-compose.test.yml up -d
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: Wait for services
+        run: |
+          echo "Waiting for services to be healthy..."
+          services=("auth-pg-test")
+          for service in "${services[@]}"; do
+            container_name=$(docker-compose -f docker/docker-compose.test.yml ps -q $service | xargs docker inspect --format '{{.Name}}' | sed 's/^\///')
+            if [ -z "$container_name" ]; then
+              echo "Container for $service not found. Showing logs..."
+              docker-compose -f docker/docker-compose.test.yml logs $service
+              exit 1
+            fi
+            echo "Checking health for $container_name ($service)..."
+            timeout 60s bash -c "while [ \"\$(docker inspect --format='{{.State.Health.Status}}' $container_name)\" != \"healthy\" ]; do
+              echo \"Waiting for $service to be healthy...\"
+              sleep 2
+              if [ \"\$(docker inspect --format='{{.State.Status}}' $container_name)\" != \"running\" ]; then
+                echo \"Service $service is not running. Showing logs...\"
+                docker-compose -f docker/docker-compose.test.yml logs $service
+                exit 1
+              fi
+            done"
+            if [ $? -ne 0 ]; then
+              echo "Timeout waiting for $service to be healthy. Showing logs..."
+              docker-compose -f docker/docker-compose.test.yml logs $service
+              exit 1
+            fi
+            echo "$service is healthy!"
+          done
+
+      - name: Integration tests
+        run: pnpm test:integration
+
+      - name: Show Docker Compose logs on failure
+        if: failure()
+        run: docker-compose -f docker-compose.test.yml logs
+
+      - name: Stop Docker Compose
+        if: always()
+        run: |
+          docker-compose -f docker-compose.test.yml down
