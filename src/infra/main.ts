@@ -8,7 +8,6 @@ import {
 import { AppModule } from './app.module'
 
 async function bootstrap() {
-  console.log(process.env.KAFKA_BROKER)
   const kafkaBroker = process.env.KAFKA_BROKER ?? 'localhost:9092'
 
   const kafkaOptions: KafkaOptions = {

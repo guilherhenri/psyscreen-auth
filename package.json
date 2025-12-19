@@ -1,8 +1,6 @@
 {
   "name": "@psycreen/auth",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Event-driven authentication microservice built with NestJS, Kafka, and PostgreSQL",
   "scripts": {
     "build": "nest build",
     "start": "dotenv -- nest start",
