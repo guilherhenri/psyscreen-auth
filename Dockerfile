@@ -12,6 +12,20 @@ COPY . .
 
 RUN pnpm run build
 
+FROM node:22-alpine AS migrator
+
+WORKDIR /api
+
+RUN npm install -g pnpm@10.22.0
+
+COPY --from=builder /api/dist dist
+COPY --from=builder /api/package.json .
+COPY --from=builder /api/pnpm-lock.yaml .
+
+RUN pnpm install --frozen-lockfile --prefer-offline
+
+CMD ["pnpm", "migration:run"]
+
 FROM node:22-alpine AS runner
 
 WORKDIR /api
