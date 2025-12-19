@@ -24,7 +24,7 @@ COPY --from=builder /api/pnpm-lock.yaml .
 
 RUN pnpm install --frozen-lockfile --prefer-offline
 
-CMD ["pnpm", "migration:run"]
+CMD ["pnpm", "migration:run:prod"]
 
 FROM node:22-alpine AS runner
 

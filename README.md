@@ -70,7 +70,7 @@ docker compose up -d
 
 ```bash
 pnpm install
-pnpm migration:run
+pnpm migration:run:dev
 ```
 
 **5. Start the Microservice**
@@ -226,19 +226,60 @@ src/
 
 ## Available Scripts
 
+### Development
+
 ```json
 {
-  "build": "Build for production",
-  "start:dev": "Start with hot-reload",
+  "start:dev": "Start development server with hot-reload",
+  "start:debug": "Start with Node.js debugger attached",
   "migration:generate": "Generate migration from entity changes",
-  "migration:run": "Apply pending migrations",
-  "migration:revert": "Rollback last migration",
+  "migration:run:dev": "Apply pending migrations (development)",
+  "migration:revert:dev": "Rollback last migration (development)",
+  "migration:show:dev": "Show all migrations and their status"
+}
+```
+
+### Production
+
+```json
+{
+  "build": "Build application for production",
+  "start:prod": "Start production server",
+  "migration:run:prod": "Apply pending migrations (production)",
+  "migration:revert:prod": "Rollback last migration (production)",
+  "migration:show:prod": "Show all migrations and their status"
+}
+```
+
+### Testing & Quality
+
+```json
+{
   "test": "Run unit tests",
+  "test:watch": "Run tests in watch mode",
   "test:integration": "Run integration tests",
-  "test:cov": "Generate coverage report",
-  "lint": "Fix linting issues",
+  "test:cov": "Generate test coverage report",
+  "check": "Type-check without emitting files",
+  "lint": "Fix linting issues automatically",
   "format": "Format code with Prettier"
 }
+```
+
+### Usage Examples
+
+```bash
+# Development workflow
+pnpm start:dev
+pnpm migration:generate src/infra/database/migrations/add-users-table
+pnpm migration:run:dev
+
+# Production deployment (Docker)
+docker exec -it auth-service pnpm migration:run:prod
+docker exec -it auth-service pnpm start:prod
+
+# Testing
+pnpm test:cov
+pnpm test:integration
 ```
 
 ---
