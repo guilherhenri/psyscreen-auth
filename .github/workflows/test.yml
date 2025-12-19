@@ -74,8 +74,8 @@ jobs:
       DATABASE_PASSWORD: auth123
       DATABASE_NAME: auth
       DATABASE_PORT: 5482
-      JWT_PRIVATE_KEY: 'test-private-key'
-      JWT_PUBLIC_KEY: 'test-public-key'
+      JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
     services:
       docker:
         image: docker:dind
