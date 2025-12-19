@@ -3,10 +3,6 @@ name: Unit and Integration Tests
 on:
   workflow_call:
 
-env:
-  TURBO_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  TURBO_TEAM: guilherhenri
-
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -71,6 +67,15 @@ jobs:
   integration:
     needs: setup
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      DATABASE_HOST: localhost
+      DATABASE_USER: auth
+      DATABASE_PASSWORD: auth123
+      DATABASE_NAME: auth
+      DATABASE_PORT: 5482
+      JWT_PRIVATE_KEY: 'test-private-key'
+      JWT_PUBLIC_KEY: 'test-public-key'
     services:
       docker:
         image: docker:dind
@@ -138,10 +143,10 @@ jobs:
           echo "Waiting for services to be healthy..."
           services=("auth-pg-test")
           for service in "${services[@]}"; do
-            container_name=$(docker-compose -f docker/docker-compose.test.yml ps -q $service | xargs docker inspect --format '{{.Name}}' | sed 's/^\///')
+            container_name=$(docker-compose -f docker-compose.test.yml ps -q $service | xargs docker inspect --format '{{.Name}}' | sed 's/^\///')
             if [ -z "$container_name" ]; then
               echo "Container for $service not found. Showing logs..."
-              docker-compose -f docker/docker-compose.test.yml logs $service
+              docker-compose -f docker-compose.test.yml logs $service
               exit 1
             fi
             echo "Checking health for $container_name ($service)..."
@@ -150,13 +155,13 @@ jobs:
               sleep 2
               if [ \"\$(docker inspect --format='{{.State.Status}}' $container_name)\" != \"running\" ]; then
                 echo \"Service $service is not running. Showing logs...\"
-                docker-compose -f docker/docker-compose.test.yml logs $service
+                docker-compose -f docker-compose.test.yml logs $service
                 exit 1
               fi
             done"
             if [ $? -ne 0 ]; then
               echo "Timeout waiting for $service to be healthy. Showing logs..."
-              docker-compose -f docker/docker-compose.test.yml logs $service
+              docker-compose -f docker-compose.test.yml logs $service
               exit 1
             fi
             echo "$service is healthy!"
