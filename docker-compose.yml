@@ -1,4 +1,4 @@
-name: psyscreen
+name: psyscreen-auth
 
 services:
   auth-pg:
