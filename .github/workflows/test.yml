@@ -76,6 +76,7 @@ jobs:
       DATABASE_PORT: 5482
       JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
       JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
+      JWT_KEY_ID: ${{ secrets.JWT_KEY_ID }}
     services:
       docker:
         image: docker:dind
