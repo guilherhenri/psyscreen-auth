@@ -102,6 +102,7 @@ docker run -d \
   -e DATABASE_PORT=5432 \
   -e JWT_PRIVATE_KEY=your-private-key \
   -e JWT_PUBLIC_KEY=your-public-key \
+  -e JWT_KEY_ID=your-key-id \
   -e KAFKA_BROKER=kafka:9092 \
   guilherhenri/psyscreen-auth:latest
 ```
@@ -296,6 +297,7 @@ pnpm test:integration
 | `DATABASE_PORT`                  | Yes      | -              | Database port                       |
 | `JWT_PRIVATE_KEY`                | Yes      | -              | RSA private key for JWT signing     |
 | `JWT_PUBLIC_KEY`                 | Yes      | -              | RSA public key for JWT verification |
+| `JWT_KEY_ID`                     | Yes      | -              | Key ID (kid) for keys validation    |
 | `KAFKA_BROKER`                   | No       | localhost:9092 | Kafka broker address                |
 | `KAFKAJS_NO_PARTITIONER_WARNING` | No       | 1              | Suppress KafkaJS warnings           |
 

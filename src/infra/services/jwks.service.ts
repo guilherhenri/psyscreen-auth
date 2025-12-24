@@ -17,7 +17,7 @@ export class JwksService {
       await jose.importSPKI(publicKeyPem, 'RS256')
     )
 
-    jwk.kid = '2025-12'
+    jwk.kid = this.env.get('JWT_KEY_ID')
     jwk.alg = 'RS256'
     jwk.use = 'sig'
 

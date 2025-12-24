@@ -14,6 +14,7 @@ export const envSchema = z.object({
 
   JWT_PRIVATE_KEY: z.string(),
   JWT_PUBLIC_KEY: z.string(),
+  JWT_KEY_ID: z.string(),
 })
 
 export type Env = z.infer<typeof envSchema>

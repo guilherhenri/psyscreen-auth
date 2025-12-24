@@ -22,7 +22,7 @@ import { HandlersModule } from './handlers/handlers.module'
         const publicKey = env.get('JWT_PUBLIC_KEY')
 
         return {
-          signOptions: { algorithm: 'RS256' },
+          signOptions: { algorithm: 'RS256', keyid: env.get('JWT_KEY_ID') },
           privateKey: Buffer.from(privateKey, 'base64'),
           publicKey: Buffer.from(publicKey, 'base64'),
         }
